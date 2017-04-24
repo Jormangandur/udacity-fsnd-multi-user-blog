@@ -7,7 +7,7 @@
   * Login
   * Logout
   * Init? - track user to be easily logged in on all pages
-
+* Add username already exists error message on signup
 * Add Model parent keys/classes
 * Implement @classmethods for User Model
   * Easier user info retrieval etc
