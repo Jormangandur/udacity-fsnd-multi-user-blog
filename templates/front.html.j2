@@ -3,7 +3,7 @@
 {% block content %}
   <h2>Latest Posts</h2>
   {% for post in posts %}
-    {{ post.render() | safe }}
+    {{ post.render(env) | safe }}
     <br><br>
   {% endfor %}
 {% endblock %}
