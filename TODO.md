@@ -1,14 +1,19 @@
 # TODO
+* Signup, login, logout workflow
+  * Links between pages as appropriate
+* Edit blog posts
+  * Only available to logged in user who post belongs do
+  * Editing can be cancelled at any time and redirect back to viewing post
+* Creator of post can delete it
+* Post 'likes'
+ * Users can like a post once
+ * Cannot like own post
+* Comments
+  * Only logged in users can comment
+  * Only edit and delete own comments
 * Refactor basic functionality
-  * Create Parent BlogHandler class for Handlers
-  * write, render etc
-  * secure cookie method
-  * read secure cookie method
-  * Login
-  * Logout
   * Init? - track user to be easily logged in on all pages
-* Add username already exists error message on signup
 * Add Model parent keys/classes
-* Implement @classmethods for User Model
-  * Easier user info retrieval etc
-  * Register
+* Complete README
+  * How to run Project
+  * Dependencies etc
