@@ -1,0 +1,21 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+  <form method="post">
+      <label>
+          Username
+          <input type="text" value="{{username}}" name="username" required>
+      </label>
+      <br>
+      <br>
+      <label>
+          Password
+          <input type="password" name="password" required>
+      </label>
+      <br>
+      <div>{{error}}</div>
+      <br>
+      <br>
+      <input type="submit">
+  </form>
+{% endblock %}

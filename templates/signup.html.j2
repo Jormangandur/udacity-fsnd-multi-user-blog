@@ -1,0 +1,36 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+  <form method="post">
+      <label>
+          Username
+          <input type="text" value="{{username}}" name="username" required>
+      </label>
+      <br>
+      <div>{{error_name}}</div>
+      <br>
+      <label>
+          Password
+          <input type="password" name="password" required>
+      </label>
+      <br>
+      <div>{{error_password}}</div>
+      <br>
+      <label>
+          Verify Password
+          <input type="password" name="verify" required>
+      </label>
+      <br>
+      <div>{{error_pass_match}}</div>
+      <br>
+      <label>
+          Email (optional)
+          <input type="text" value="{{email}}" name="email">
+      </label>
+      <br>
+      <div>{{error_email}}</div>
+      <br>
+      <br>
+      <input type="submit">
+  </form>
+{% endblock %}
