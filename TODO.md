@@ -1,7 +1,4 @@
 # TODO
-* Seperate main.py more
- * move contents of handlers into seperate modules
- * posts.py, registration.py etc
 * Signup, login, logout workflow
   * Links between pages as appropriate
 * Edit blog posts

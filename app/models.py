@@ -1,23 +1,27 @@
 import jinja2
-from credentialhelpers import *
+from credential_helpers import *
 from google.appengine.ext import db
 
 
-def render_str(template, env, **params):
+def get_env():
+    import main
+    return main.jinja_env
+
+
+def render_str(template, **params):
     """Renders a jinja2 template string.
 
     Retrieves a jinja2 template from jinja_env and renders it with given params.
 
     Args:
         template: String, path of jinja2 template
-        env: jina2 environment for rendering
         **params: Optional params to pass to template as variable
 
     Returns:
         Rendered template as unicode string
     """
 
-    jinja_env = env
+    jinja_env = get_env()
     t = jinja_env.get_template(template)
     return t.render(params)
 
@@ -29,8 +33,8 @@ class BlogPost(db.Model):
     content = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
-    def render(self, env):
-        return render_str("post.html.j2", env, post=self)
+    def render(self):
+        return render_str("post.html.j2", post=self)
 
 
 class User(db.Model):
