@@ -34,7 +34,10 @@ class NewPostHandler(BlogHandler):
                     content=content, error=error)
 
     def get(self):
-        self.render_new_post()
+        if self.user:
+            self.render_new_post()
+        else:
+            self.redirect('/blog/login')
 
     def post(self):
         """Gets data from input form.
@@ -49,9 +52,12 @@ class NewPostHandler(BlogHandler):
         content = self.request.get("content")
 
         if subject and content:
-            post = app.models.BlogPost(subject=subject, content=content)
-            post.put()
-            self.redirect("/blog/%s" % str(post.key().id()))
+            if self.user:
+                owner_id = self.user.key().id()
+                post = app.models.BlogPost(
+                    subject=subject, content=content, owner_id=owner_id)
+                post.put()
+                self.redirect("/blog/%s" % str(post.key().id()))
         else:
             error = "Please enter subject and content!"
             self.render_new_post(subject, content, error)
@@ -67,7 +73,10 @@ class ShowPostHandler(BlogHandler):
     def render_post(self, post_id):
         post = app.models.BlogPost.get_by_id(post_id)
         if post:
-            self.render("permalink.html.j2", post=post)
+            can_edit = False
+            if self.user and self.user.key().id() == post.owner_id:
+                can_edit = True
+            self.render("permalink.html.j2", post=post, can_edit=can_edit)
         else:
             self.error(404)
             return
@@ -75,6 +84,44 @@ class ShowPostHandler(BlogHandler):
     def get(self, post_id):
         post_id = int(post_id)
         self.render_post(post_id)
+
+
+class EditPostHandler(BlogHandler):
+    def render_edit(self, post):
+        subject = post.subject
+        content = post.content
+        self.render("edit.html.j2", subject=subject,
+                    content=content, post=post)
+
+    def get(self, post_id):
+        post_id = int(post_id)
+        post = app.models.BlogPost.get_by_id(post_id)
+        if self.user:
+            if self.user.key().id() == post.owner_id:
+                self.render_edit(post)
+            else:
+                self.redirect('/blog/%s' % post_id)
+        else:
+            self.redirect('/blog/login')
+
+    def post(self, post_id):
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+        post_id = self.request.get('post_id')
+        post = app.models.BlogPost.get_by_id(int(post_id))
+        if post:
+            post.subject = subject
+            post.content = content
+            post.put()
+        self.redirect('/blog/%s' % post_id)
+
+
+class DeletePostHandler(BlogHandler):
+    def get(self, post_id):
+        post = app.models.BlogPost.get_by_id(int(post_id))
+        if self.user and post and self.user.key().id() == post.owner_id:
+            post.delete()
+        self.redirect('/blog')
 
 
 class SignupHandler(BlogHandler):
@@ -154,11 +201,8 @@ class WelcomeHandler(BlogHandler):
         Redirect to '/blog/signup' if cookie is not present or invalid
         to prevent malicious access.
         """
-        user_id_cookie = self.get_cookie('user_id')
-        if user_id_cookie and app.credential_helpers.check_secure(user_id_cookie):
-            user_id = int(user_id_cookie.split('|')[0])
-            user = app.models.User.by_id(user_id)
-            username = user.username
+        if self.user:
+            username = self.user.username
             self.render("welcome.html.j2", username=username)
         else:
             self.redirect('/blog/signup')
@@ -210,5 +254,8 @@ class LogoutHandler(BlogHandler):
     """
 
     def get(self):
-        self.logout()
-        self.redirect('/blog')
+        if self.user:
+            self.logout()
+            self.redirect('/blog')
+        else:
+            self.redirect('/blog/login')

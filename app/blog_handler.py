@@ -1,6 +1,7 @@
 import webapp2
 import jinja2
 import app.credential_helpers
+import app.models
 
 
 def get_env():
@@ -23,6 +24,18 @@ class BlogHandler(webapp2.RequestHandler):
         True if secure_val is valid
         None if invalid
     """
+
+    def initialize(self, *a, **kw):
+        """Get currently logged in user on every HTTP request
+
+        Extends GAE RequestHandler.initialize() method to retrieve logged in
+        user from browser cookie. Sets the current user to BlogHandler variable
+        self.user.
+        """
+        webapp2.RequestHandler.initialize(self, *a, **kw)
+        user_id_cookie = self.get_cookie('user_id')
+        self.user = user_id_cookie and app.models.User.by_id(
+            int(user_id_cookie))
 
     def write(self, *a, **kw):
         self.response.out.write(*a, **kw)
@@ -80,8 +93,8 @@ class BlogHandler(webapp2.RequestHandler):
             None if cookie did not exist
         """
         cookie = self.request.cookies.get(name)
-        if cookie and app.credential_helpers.check_secure(cookie):
-            return cookie
+        if cookie:
+            return app.credential_helpers.check_secure(cookie)
 
     def login(self, user):
         """Sets 'user_id' cookie to logged in user.

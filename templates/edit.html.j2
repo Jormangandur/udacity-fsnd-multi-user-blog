@@ -1,0 +1,25 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<h2>Edit Post</h2>
+<hr>
+
+  <form class="editpost" method="post">
+    <label>
+      <h3>Subject</h3>
+      <input type="text" name="subject" value="{{subject}}">
+      <input type="hidden" name="post_id" value="{{post.key().id()}}"
+    </label>
+    <label>
+      <h3>blog</h3>
+      <textarea name="content">{{content}}</textarea>
+    </label>
+    <div class="error">
+      {{error}}
+    </div>
+    <input type="submit">
+  </form>
+  <div >
+    <a href="/blog/{{post.key().id()}}">Cancel</a>
+  </div>
+{% endblock %}

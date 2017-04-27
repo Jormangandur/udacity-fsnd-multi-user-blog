@@ -31,6 +31,7 @@ class BlogPost(db.Model):
     """
     subject = db.StringProperty(required=True)
     content = db.TextProperty(required=True)
+    owner_id = db.IntegerProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
     def render(self):
