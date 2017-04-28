@@ -2,6 +2,7 @@ import webapp2
 import jinja2
 import app.credential_helpers
 import app.models
+import logging
 
 
 def get_env():

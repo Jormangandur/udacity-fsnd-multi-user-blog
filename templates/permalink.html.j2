@@ -2,6 +2,14 @@
 
 {% block content %}
   {{ post.render() | safe }}
+  <div>
+    {{ error_msg }}
+  </div>
+  <div>
+    <form action="/blog/like/{{ post.key().id() }}" method="POST">
+      <input type="submit" value="Like">
+    </form>
+  </div>
   {% if can_edit %}
   <div class="edit">
     <a href="/blog/edit/{{ post.key().id() }}">edit</a>

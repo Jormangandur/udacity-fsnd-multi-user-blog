@@ -26,6 +26,10 @@ def render_str(template, **params):
     return t.render(params)
 
 
+def blog_key(name='default'):
+    return db.Key.from_path('BlogPost', name)
+
+
 class BlogPost(db.Model):
     """Model class for blog posts.
     """
@@ -36,6 +40,19 @@ class BlogPost(db.Model):
 
     def render(self):
         return render_str("post.html.j2", post=self)
+
+
+def likes_key(name='default'):
+    return db.Key.from_path('likes', name)
+
+
+class Likes(db.Model):
+    post_id = db.IntegerProperty(required=True)
+    liked_by_id = db.IntegerProperty()
+
+
+def users_key(group='default'):
+    return db.Key.from_path('users', group)
 
 
 class User(db.Model):
@@ -55,7 +72,7 @@ class User(db.Model):
         Returns:
             Instance of User Model/Class
         """
-        return User.get_by_id(uid)
+        return User.get_by_id(uid, parent=users_key())
 
     @classmethod
     def by_name(cls, username):
@@ -83,7 +100,8 @@ class User(db.Model):
             Instance of User Model/Class
         """
         password_hash = pw_hash(username, password)
-        return User(username=username,
+        return User(parent=users_key(),
+                    username=username,
                     pw_hash=password_hash,
                     email=email)
 

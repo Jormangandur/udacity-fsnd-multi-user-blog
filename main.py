@@ -14,6 +14,7 @@ app = webapp2.WSGIApplication([
     ('/blog/(\d+)', ShowPostHandler),
     ('/blog/edit/(\d+)', EditPostHandler),
     ('/blog/delete/(\d+)', DeletePostHandler),
+    ('/blog/like/(\d+)', LikePostHandler),
     ('/blog/signup', SignupHandler),
     ('/blog/welcome', WelcomeHandler),
     ('/blog/login', LoginHandler),

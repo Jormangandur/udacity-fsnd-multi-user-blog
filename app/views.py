@@ -2,6 +2,7 @@ import app.models
 import app.credential_helpers
 from blog_handler import *
 from google.appengine.ext import db
+import logging
 
 
 class MainPage (BlogHandler):
@@ -16,8 +17,8 @@ class MainPage (BlogHandler):
         Gets 10 most recent posts from datastore and passes them as variables
         into front template.
         """
-        posts = db.GqlQuery(
-            "SELECT * FROM BlogPost ORDER BY created desc limit 10")
+        posts = app.models.BlogPost.all().order(
+            '-created').ancestor(app.models.blog_key()).fetch(limit=10)
 
         self.render("front.html.j2", posts=posts)
 
@@ -55,7 +56,8 @@ class NewPostHandler(BlogHandler):
             if self.user:
                 owner_id = self.user.key().id()
                 post = app.models.BlogPost(
-                    subject=subject, content=content, owner_id=owner_id)
+                    parent=app.models.blog_key(), subject=subject, content=content,
+                    owner_id=owner_id)
                 post.put()
                 self.redirect("/blog/%s" % str(post.key().id()))
         else:
@@ -70,20 +72,29 @@ class ShowPostHandler(BlogHandler):
     404 if post id doesnt exist
     """
 
-    def render_post(self, post_id):
-        post = app.models.BlogPost.get_by_id(post_id)
+    def render_post(self, post_id, error=""):
+        error_msg = ""
+        key = db.Key.from_path('BlogPost', int(
+            post_id), parent=app.models.blog_key())
+        post = db.get(key)
         if post:
             can_edit = False
             if self.user and self.user.key().id() == post.owner_id:
                 can_edit = True
-            self.render("permalink.html.j2", post=post, can_edit=can_edit)
+            if error == "like_own_post":
+                error_msg = "Cannot like own post"
+                self.set_cookie("error", "")
+            elif error == "no_user":
+                error_msg = "You must be logged in to like a post"
+            self.render("permalink.html.j2", post=post,
+                        error_msg=error_msg, can_edit=can_edit)
         else:
             self.error(404)
             return
 
     def get(self, post_id):
-        post_id = int(post_id)
-        self.render_post(post_id)
+        error = self.get_cookie('error')
+        self.render_post(post_id, error)
 
 
 class EditPostHandler(BlogHandler):
@@ -94,8 +105,9 @@ class EditPostHandler(BlogHandler):
                     content=content, post=post)
 
     def get(self, post_id):
-        post_id = int(post_id)
-        post = app.models.BlogPost.get_by_id(post_id)
+        key = db.Key.from_path('BlogPost', int(
+            post_id), parent=app.models.blog_key())
+        post = db.get(key)
         if self.user:
             if self.user.key().id() == post.owner_id:
                 self.render_edit(post)
@@ -108,7 +120,9 @@ class EditPostHandler(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         post_id = self.request.get('post_id')
-        post = app.models.BlogPost.get_by_id(int(post_id))
+        key = db.Key.from_path('BlogPost', int(
+            post_id), parent=app.models.blog_key())
+        post = db.get(key)
         if post:
             post.subject = subject
             post.content = content
@@ -116,11 +130,34 @@ class EditPostHandler(BlogHandler):
         self.redirect('/blog/%s' % post_id)
 
 
+class LikePostHandler(BlogHandler):
+    def post(self, post_id):
+        likes = app.models.Likes.gql("WHERE post_id = %s" % post_id)
+        key = db.Key.from_path('BlogPost', int(
+            post_id), parent=app.models.blog_key())
+        post = db.get(key)
+
+        if self.user and likes:
+            if self.user.key().id() == post.owner_id:
+                self.set_cookie('error', 'like_own_post')
+            else:
+                likes = app.models.Likes(parent=app.models.likes_key(
+                ), post_id=post.key().id(), liked_by_id=self.user.key().id())
+                likes.put()
+        else:
+            self.set_cookie('error', 'no_user')
+        self.redirect('/blog/%s' % post_id)
+
+
 class DeletePostHandler(BlogHandler):
     def get(self, post_id):
-        post = app.models.BlogPost.get_by_id(int(post_id))
+        key = db.Key.from_path('BlogPost', int(
+            post_id), parent=app.models.blog_key())
+        post = db.get(key)
+        likes = app.models.Likes.gql("WHERE post_id = %s" % post_id)
         if self.user and post and self.user.key().id() == post.owner_id:
             post.delete()
+            likes.delete()
         self.redirect('/blog')
 
 
