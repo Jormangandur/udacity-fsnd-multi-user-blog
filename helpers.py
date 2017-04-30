@@ -3,12 +3,51 @@ import random
 import string
 import hashlib
 import hmac
-
+from google.appengine.ext import db
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
 PASS_RE = re.compile(r"^.{3,20}$")
 EMAIL_RE = re.compile(r"^[\S]+@[\S]+.[\S]+$")
 SECRET = 'secret'
+
+
+def get_env():
+    import main
+    return main.jinja_env
+
+
+def render_str(template, **params):
+    """Renders a jinja2 template string.
+
+    Retrieves a jinja2 template from jinja_env and renders it with given params.
+
+    Args:
+        template: String, path of jinja2 template
+        **params: Optional params to pass to template as variable
+
+    Returns:
+        Rendered template as unicode string
+    """
+
+    jinja_env = get_env()
+    t = jinja_env.get_template(template)
+    return t.render(params)
+
+
+def blog_key(name='default'):
+    return db.Key.from_path('BlogPost', name)
+
+
+def likes_key(name='default'):
+    return db.Key.from_path('likes', name)
+
+
+def comments_key(name='default'):
+    return db.Key.from_path('Comment', name)
+
+
+def users_key(group='default'):
+    return db.Key.from_path('users', group)
 
 
 def make_salt():

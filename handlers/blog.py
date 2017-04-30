@@ -1,8 +1,7 @@
 import webapp2
 import jinja2
-import app.credential_helpers
-import app.models
-import logging
+from models.user import User
+from helpers import *
 
 
 def get_env():
@@ -35,7 +34,7 @@ class BlogHandler(webapp2.RequestHandler):
         """
         webapp2.RequestHandler.initialize(self, *a, **kw)
         user_id_cookie = self.get_cookie('user_id')
-        self.user = user_id_cookie and app.models.User.by_id(
+        self.user = user_id_cookie and User.by_id(
             int(user_id_cookie))
 
     def write(self, *a, **kw):
@@ -79,7 +78,7 @@ class BlogHandler(webapp2.RequestHandler):
             name: String, name of the cookie to be set
             val: String, value for the cookie
         """
-        cookie = app.credential_helpers.make_secure(val)
+        cookie = make_secure(val)
         self.response.headers.add_header(
             'Set-Cookie', '%s=%s;Path=/' % (name, cookie))
 
@@ -95,7 +94,7 @@ class BlogHandler(webapp2.RequestHandler):
         """
         cookie = self.request.cookies.get(name)
         if cookie:
-            return app.credential_helpers.check_secure(cookie)
+            return check_secure(cookie)
 
     def login(self, user):
         """Sets 'user_id' cookie to logged in user.
