@@ -72,29 +72,47 @@ class ShowPostHandler(BlogHandler):
     404 if post id doesnt exist
     """
 
-    def render_post(self, post_id, error=""):
+    def render_post(self, post, error="", unlike=False, comments=""):
         error_msg = ""
-        key = db.Key.from_path('BlogPost', int(
-            post_id), parent=app.models.blog_key())
-        post = db.get(key)
         if post:
             can_edit = False
-            if self.user and self.user.key().id() == post.owner_id:
-                can_edit = True
+            current_user_id = ""
+            if self.user:
+                if self.user.key().id() == post.owner_id:
+                    can_edit = True
+                current_user_id = self.user.key().id()
             if error == "like_own_post":
                 error_msg = "Cannot like own post"
-                self.set_cookie("error", "")
             elif error == "no_user":
                 error_msg = "You must be logged in to like a post"
+            elif error == "prev_like":
+                error_msg = "You can only like a post once"
+            self.set_cookie("error", "")
             self.render("permalink.html.j2", post=post,
-                        error_msg=error_msg, can_edit=can_edit)
+                        error_msg=error_msg, unlike=unlike, can_edit=can_edit,
+                        comments=comments, current_user_id=current_user_id)
         else:
             self.error(404)
             return
 
     def get(self, post_id):
+        unlike = False
         error = self.get_cookie('error')
-        self.render_post(post_id, error)
+        key = db.Key.from_path('BlogPost', int(
+            post_id), parent=app.models.blog_key())
+        post = db.get(key)
+        likes = app.models.Likes.all().filter('post_id =', int(
+            post_id)).ancestor(app.models.likes_key())
+
+        for like in likes:
+            logging.info(like.liked_by_id)
+        if self.user and self.prev_like(likes, self.user.key().id()):
+            unlike = True
+
+        comments = app.models.Comment.all().filter(
+            'post_id =', int(post_id)).ancestor(
+                app.models.comments_key()).order('-created')
+        self.render_post(post, error, unlike, comments)
 
 
 class EditPostHandler(BlogHandler):
@@ -131,21 +149,59 @@ class EditPostHandler(BlogHandler):
 
 
 class LikePostHandler(BlogHandler):
+
     def post(self, post_id):
-        likes = app.models.Likes.gql("WHERE post_id = %s" % post_id)
+        likes = app.models.Likes.all().filter('post_id =', int(
+            post_id)).ancestor(app.models.likes_key())
         key = db.Key.from_path('BlogPost', int(
             post_id), parent=app.models.blog_key())
         post = db.get(key)
-
-        if self.user and likes:
-            if self.user.key().id() == post.owner_id:
-                self.set_cookie('error', 'like_own_post')
-            else:
-                likes = app.models.Likes(parent=app.models.likes_key(
+        if post and likes:
+            can_like = self.check_like(post, likes)
+            if can_like:
+                like = app.models.Likes(parent=app.models.likes_key(
                 ), post_id=post.key().id(), liked_by_id=self.user.key().id())
-                likes.put()
-        else:
-            self.set_cookie('error', 'no_user')
+                like.put()
+
+        self.redirect('/blog/%s' % post_id)
+
+
+class CommentHandler(BlogHandler):
+    def create_comment(self, content, owner_id, post_id):
+        comment = app.models.Comment(
+            parent=app.models.comments_key(), content=content,
+            owner_id=owner_id, post_id=post_id)
+        comment.put()
+
+    def post(self, post_id):
+        content = self.request.get('content')
+        owner_id = self.user.key().id()
+        post_id = int(post_id)
+
+        if content and owner_id and post_id:
+            self.create_comment(content, owner_id, post_id)
+        self.redirect('/blog/%s' % post_id)
+
+
+class DeleteCommentHandler(BlogHandler):
+    def post(self, post_id, comment_id):
+        key = db.Key.from_path('Comment', int(
+            comment_id), parent=app.models.comments_key())
+        comment = db.get(key)
+        comment.delete()
+
+        self.redirect('/blog/%s' % post_id)
+
+
+class UnlikePostHandler(BlogHandler):
+
+    def post(self, post_id):
+        likes = app.models.Likes.all().filter('post_id =', int(
+            post_id)).ancestor(app.models.likes_key())
+        if likes and self.user:
+            for like in likes:
+                if like.liked_by_id == self.user.key().id():
+                    like.delete()
         self.redirect('/blog/%s' % post_id)
 
 
@@ -154,10 +210,12 @@ class DeletePostHandler(BlogHandler):
         key = db.Key.from_path('BlogPost', int(
             post_id), parent=app.models.blog_key())
         post = db.get(key)
-        likes = app.models.Likes.gql("WHERE post_id = %s" % post_id)
+        likes = app.models.Likes.all().filter('post_id =', int(
+            post_id)).ancestor(app.models.likes_key())
         if self.user and post and self.user.key().id() == post.owner_id:
             post.delete()
-            likes.delete()
+            for like in likes:
+                like.delete()
         self.redirect('/blog')
 
 

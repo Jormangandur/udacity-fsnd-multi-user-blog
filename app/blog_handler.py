@@ -110,3 +110,21 @@ class BlogHandler(webapp2.RequestHandler):
         """Removes 'user_id' cookie from browser.
         """
         self.response.headers.add_header('Set-Cookie', 'user_id=;Path=/')
+
+    def prev_like(self, likes, user_id):
+        for like in likes:
+            if like.liked_by_id == user_id:
+                return True
+
+    def check_like(self, post, likes):
+        if not self.user:
+            self.set_cookie('error', 'no_user')
+            return
+        if self.user.key().id() == post.owner_id:
+            self.set_cookie('error', 'like_own_post')
+            return
+        if self.prev_like(likes, self.user.key().id()):
+            self.set_cookie('error', 'prev_like')
+            return
+
+        return True

@@ -6,9 +6,15 @@
     {{ error_msg }}
   </div>
   <div>
-    <form action="/blog/like/{{ post.key().id() }}" method="POST">
-      <input type="submit" value="Like">
-    </form>
+    {% if unlike %}
+      <form action="/blog/unlike/{{ post.key().id() }}" method="POST">
+        <input type="submit" value="Unlike">
+      </form>
+    {% else %}
+      <form action="/blog/like/{{ post.key().id() }}" method="POST">
+        <input type="submit" value="Like">
+      </form>
+    {% endif %}
   </div>
   {% if can_edit %}
   <div class="edit">
@@ -17,5 +23,16 @@
   <div class="delete">
     <a href="/blog/delete/{{ post.key().id() }}">delete</a>
   </div>
+  {% endif %}
+  <div class="comment_form">
+    <form action="/blog/newcomment/{{ post.key().id() }}" method="POST">
+      <textarea name="content"></textarea>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  {% if comments %}
+    {% for comment in comments %}
+      {{ comment.render(post.key().id(), current_user_id) | safe}}
+    {% endfor %}
   {% endif %}
 {% endblock %}

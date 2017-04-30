@@ -1,0 +1,16 @@
+<div class="comment">
+  <pre class="comment-content">{{ comment.content }}</pre>
+  <div class="comment-created">
+    {{ comment.created.strftime("%b %d, %Y") }}
+  </div>
+  <div class="comment-owner">
+    {{ owner_name }}
+  </div>
+  {% if current_user_id == comment.owner_id %}
+  <div class="comment-delete">
+    <form action="/blog/deletecomment/{{post_id}}/{{ comment.key().id() }}" method="post">
+      <input type="submit" value="delete">
+    </form>
+  </div>
+  {% endif %}
+</div>

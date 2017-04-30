@@ -15,3 +15,16 @@ indexes:
   properties:
   - name: created
     direction: desc
+
+- kind: Comment
+  ancestor: yes
+  properties:
+  - name: post_id
+  - name: created
+
+- kind: Comment
+  ancestor: yes
+  properties:
+  - name: post_id
+  - name: created
+    direction: desc
