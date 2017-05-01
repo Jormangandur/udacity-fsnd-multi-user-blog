@@ -1,8 +1,4 @@
 # TODO
-* Users profile page:
-  * See own posts
-  * See own comments
-  * See liked posts
 * Style!
 * Complete README
   * How to run Project

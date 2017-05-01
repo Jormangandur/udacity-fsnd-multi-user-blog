@@ -11,7 +11,7 @@ class User(db.Model):
     email = db.StringProperty()
 
     @classmethod
-    def by_id(cls, uid):
+    def by_id(cls, user_id):
         """Get stored User instance corresponding to user id.
 
         Args:
@@ -19,7 +19,7 @@ class User(db.Model):
         Returns:
             Instance of User Model/Class
         """
-        return User.get_by_id(uid, parent=users_key())
+        return User.get_by_id(int(user_id), parent=users_key())
 
     @classmethod
     def by_name(cls, username):

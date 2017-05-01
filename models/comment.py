@@ -28,6 +28,18 @@ class Comment(db.Model):
         return comments
 
     @classmethod
+    def by_owner_id(cls, owner_id):
+        """Get stored Comment instance corresponding to a user_id.
+
+        Args:
+            owner_id: Integer, id of a user.
+        Returns:
+            Query object of Comment instances associated with the user
+        """
+        comments = Comment.all().filter('owner_id =', int(owner_id)).ancestor(comments_key())
+        return comments
+
+    @classmethod
     def by_id(cls, comment_id):
         """Get stored Comment instance corresponding to a comment_id.
 

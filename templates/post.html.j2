@@ -1,11 +1,14 @@
 <div class="post">
   <div class="post-subject">
-    <h3><a href="/blog/{{post.key().id()}}">{{post.subject}}</a></h3>
+    <h3><a href="/blog/{{post.key().id()}}">{{ post.subject }}</a></h3>
   </div>
-<div class="post-created">
-  {{post.created.strftime("%b %d, %Y")}}
-</div>
-  <pre class="post-content">{{post.content}}</pre>
+  <div class="post-owner">
+    <h3><a href="/blog/user/{{ post.owner_id }}">by {{ owner_name }}</a></h3>
+  </div>
+  <div class="post-created">
+    {{ post.created.strftime("%b %d, %Y") }}
+  </div>
+  <pre class="post-content">{{ post.content }}</pre>
   <div class="post-likes">
     <p>{{ post.likes_count() }} likes</p>
   </div>

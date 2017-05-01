@@ -19,6 +19,18 @@ class Like(db.Model):
         return likes
 
     @classmethod
+    def by_owner_id(cls, owner_id):
+        """Get stored Like instance corresponding to a user_id.
+
+        Args:
+            owner_id: Integer, id of a user.
+        Returns:
+            Query object of Like instances associated with the user
+        """
+        likes = Like.all().filter('owner_id =', int(owner_id)).ancestor(likes_key())
+        return likes
+
+    @classmethod
     def make(cls, post_id, owner_id):
         """Create new Like() model instance.
 
