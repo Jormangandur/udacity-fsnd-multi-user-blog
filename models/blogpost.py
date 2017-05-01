@@ -1,4 +1,5 @@
 from google.appengine.ext import db
+from models.like import Like
 from helpers import *
 
 
@@ -12,6 +13,9 @@ class BlogPost(db.Model):
 
     def render(self):
         return render_str("post.html.j2", post=self)
+
+    def likes_count(self):
+        return Like.by_post_id(self.key().id()).count()
 
     @classmethod
     def by_id(cls, post_id):
