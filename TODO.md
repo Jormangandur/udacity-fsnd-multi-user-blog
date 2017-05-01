@@ -1,6 +1,4 @@
 # TODO
-* Like count on front page and in post view
-* Comment count on front page and in post view
 * Users profile page:
   * See own posts
   * See own comments
