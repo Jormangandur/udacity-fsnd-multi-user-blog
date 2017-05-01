@@ -112,7 +112,7 @@ class BlogHandler(webapp2.RequestHandler):
 
     def prev_like(self, likes, user_id):
         for like in likes:
-            if like.liked_by_id == user_id:
+            if like.owner_id == user_id:
                 return True
 
     def check_like(self, post, likes):

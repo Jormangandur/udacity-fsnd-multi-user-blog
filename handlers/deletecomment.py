@@ -7,9 +7,6 @@ from google.appengine.ext import db
 
 class DeleteCommentHandler(BlogHandler):
     def post(self, post_id, comment_id):
-        key = db.Key.from_path('Comment', int(
-            comment_id), parent=comments_key())
-        comment = db.get(key)
+        comment = Comment.by_id(comment_id)
         comment.delete()
-
         self.redirect('/blog/%s' % post_id)

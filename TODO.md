@@ -12,4 +12,5 @@
 * Complete README
   * How to run Project
   * Dependencies etc
-* Test dev branch
+
+  dev_appserver.py --clear_datastore=yes .

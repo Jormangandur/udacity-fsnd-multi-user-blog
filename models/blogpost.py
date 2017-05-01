@@ -12,3 +12,30 @@ class BlogPost(db.Model):
 
     def render(self):
         return render_str("post.html.j2", post=self)
+
+    @classmethod
+    def by_id(cls, post_id):
+        """Get stored BlogPost instance corresponding to id.
+
+        Args:
+            uid: Integer, id of a stored BlogPost instance.
+        Returns:
+            Instance of BlogPost
+        """
+        return BlogPost.get_by_id(int(post_id), parent=blog_key())
+
+    @classmethod
+    def make(cls, subject, content, owner_id):
+        """Create new BlogPost() model instance.
+
+        Args:
+            subject: String, title of post
+            content: String, text content of post
+            owner_id: Int, primary ID of User who created post
+        Returns:
+            Instance of BlogPost Model/Class
+        """
+        return BlogPost(parent=blog_key(),
+                        subject=subject,
+                        content=content,
+                        owner_id=int(owner_id))

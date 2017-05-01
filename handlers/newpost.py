@@ -32,9 +32,7 @@ class NewPostHandler(BlogHandler):
         if subject and content:
             if self.user:
                 owner_id = self.user.key().id()
-                post = BlogPost(
-                    parent=blog_key(), subject=subject, content=content,
-                    owner_id=owner_id)
+                post = BlogPost.make(subject, content, owner_id)
                 post.put()
                 self.redirect("/blog/%s" % str(post.key().id()))
         else:

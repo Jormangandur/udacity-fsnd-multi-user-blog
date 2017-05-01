@@ -12,9 +12,7 @@ class EditPostHandler(BlogHandler):
                     content=content, post=post)
 
     def get(self, post_id):
-        key = db.Key.from_path('BlogPost', int(
-            post_id), parent=blog_key())
-        post = db.get(key)
+        post = BlogPost.by_id(post_id)
         if self.user:
             if self.user.key().id() == post.owner_id:
                 self.render_edit(post)
@@ -27,9 +25,7 @@ class EditPostHandler(BlogHandler):
         subject = self.request.get('subject')
         content = self.request.get('content')
         post_id = self.request.get('post_id')
-        key = db.Key.from_path('BlogPost', int(
-            post_id), parent=blog_key())
-        post = db.get(key)
+        post = BlogPost.by_id(post_id)
         if post:
             post.subject = subject
             post.content = content
