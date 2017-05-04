@@ -1,0 +1,98 @@
+html {
+    position: relative;
+    height: 100%;
+}
+
+body {
+    font-weight: 300;
+    height: 100%;
+}
+
+a {
+    color: inherit;
+    word-wrap: break-word;
+}
+
+.page_content {
+    margin-bottom: -60px;
+}
+
+.page_content::after {
+    height: 60px;
+    content: "";
+    display: block;
+}
+
+.navbar-collapse form[role="search"] {
+    order: 1;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar-collapse form[role="search"] button, .navbar-collapse form[role="search"] input {
+    border: 0;
+    outline: none;
+}
+
+.navbar-collapse form[role="search"] .input-group {
+    width: 100%;
+}
+
+.form-register, .form-login {
+    margin-bottom: 1em;
+}
+
+.form-newpost .post-content {
+    height: 200px;
+}
+
+.form-like {
+    display: inline;
+}
+
+.post-content, .comment-content {
+    white-space: pre-wrap;
+}
+
+.post-front .post-content {
+    /*line-height * lines to show * font size to limit view on front page*/
+    max-height: calc(1.5*5*1rem);
+    overflow: hidden;
+}
+
+.footer {
+    margin-top: 10px;
+    width: 100%;
+    bottom: 0;
+    height: 50px;
+    font-size: 1.5rem;
+}
+
+.footer_item {
+    color: inherit;
+    transition: 0.3s;
+    margin: auto 0.5em;
+}
+
+.footer_item:hover {
+    color: inherit;
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+}
+
+.footer_item:hover:after {
+    width: 0%;
+}
+
+
+/*BS *.sm class or larger*/
+
+@media (min-width: 768px) {
+    .navbar-collapse form[role="search"] {
+        width: auto;
+    }
+    .navbar-collapse form[role="search"] button, .navbar-collapse form[role="search"] input {
+        padding: 15px 12px;
+    }
+}

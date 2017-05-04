@@ -1,21 +1,27 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-<h2>New Post</h2>
-<hr>
-
-  <form class="newpost" method="post">
-    <label>
-      <h3>Subject</h3>
-      <input type="text" name="subject" value="{{subject}}">
-    </label>
-    <label>
-      <h3>blog</h3>
-      <textarea name="content">{{content}}</textarea>
-    </label>
-    <div class="error">
-      {{error}}
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="text-center">New Post</h2>
+  </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-8 offset-sm-2">
+      <form class="form-newpost" method="post">
+        <div class="form-group">
+          <label for="subjectInput" >Subject</label>
+          <input class="form-control" id="subjectInput" type="text" value="{{subject}}" name="subject" placeholder="Witty title here..." required>
+        </div>
+        <div class="form-group">
+          <label for="contentInput">Content</label>
+          <textarea class="form-control post-content" id="contentInput" name="content"placeholder="Your wise words here" required>{{content}}</textarea>
+        </div>
+        {% if error %}
+          <div class="alert alert-danger"><strong>Woops! </strong>{{error}}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+      </form>
     </div>
-    <input type="submit">
-  </form>
+</div>
 {% endblock %}

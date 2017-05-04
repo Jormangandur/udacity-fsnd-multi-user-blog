@@ -1,16 +1,15 @@
-<div class="comment">
-  <pre class="comment-content">{{ comment.content }}</pre>
-  <div class="comment-created">
-    {{ comment.created.strftime("%b %d, %Y") }}
-  </div>
-  <div class="comment-owner">
-    {{ owner_name }}
-  </div>
-  {% if current_user_id == comment.owner_id %}
-  <div class="comment-delete">
-    <form action="/blog/deletecomment/{{post_id}}/{{ comment.key().id() }}" method="post">
-      <input type="submit" value="delete">
+<div class="col-9 col-md-6 offset-md-3">
+  <blockquote class="blockquote">
+    <p class="mb-0 comment-content">{{ comment.content }}</p>
+    <footer class="blockquote-footer">
+      {{ owner_name }} <small>{{ comment.created.strftime("%b %d, %Y") }}</small>
+    </footer>
+  </blockquote>
+</div>
+{% if current_user_id == comment.owner_id %}
+  <div class="col-3 align-self-center">
+    <form class=""action="/blog/deletecomment/{{post_id}}/{{ comment.key().id() }}" method="post">
+      <button class="btn btn-danger" type="submit" value="delete">Delete</button>
     </form>
   </div>
-  {% endif %}
-</div>
+{% endif %}

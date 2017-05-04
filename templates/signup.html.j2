@@ -1,39 +1,51 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-  <form method="post">
-      <label>
-          Username
-          <input type="text" value="{{username}}" name="username" required>
-      </label>
-      <br>
-      <div>{{error_name}}</div>
-      <br>
-      <label>
-          Password
-          <input type="password" name="password" required>
-      </label>
-      <br>
-      <div>{{error_password}}</div>
-      <br>
-      <label>
-          Verify Password
-          <input type="password" name="verify" required>
-      </label>
-      <br>
-      <div>{{error_pass_match}}</div>
-      <br>
-      <label>
-          Email (optional)
-          <input type="text" value="{{email}}" name="email">
-      </label>
-      <br>
-      <div>{{error_email}}</div>
-      <br>
-      <br>
-      <input type="submit">
-  </form>
-  <div>
-    <a href="/blog/login">Login</a>
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="text-center">One of us...</h1>
   </div>
+</div>
+<div class="row">
+  <div class="col-sm col-md-6">
+    <form class="form-register" method="post">
+      <div class="form-group">
+            <label for="usernameInput">Username</label>
+            <input type="text" class="form-control" id="usernameInput" value="{{username}}" name="username" required>
+      </div>
+        {% if error_name %}
+          <div class="alert alert-danger"><strong>Woops! </strong>{{error_name}}</div>
+        {% endif %}
+      <div class="form-group">
+            <label for="pwInput">Password</label>
+            <input type="password" class="form-control" id="pwInput" name="password" required>
+      </div>
+        {% if error_password %}
+          <div class="alert alert-danger"><strong>Woops! </strong>{{error_password}}</div>
+        {% endif %}
+        <div class="form-group">
+          <label for="pwVerif">Verify Password</label>
+          <input type="password" class="form-control" id="pwVerif" name="verify" required>
+      </div>
+        {% if error_pass_match %}
+          <div class="alert alert-danger"><strong>Woops! </strong>{{error_pass_match}}</div>
+        {% endif %}
+        <div class="form-group">
+          <label for="emailInput">Email (optional)</label>
+          <input type="text" class="form-control" id="emailInput" value="{{email}}" name="email">
+      </div>
+        {% if error_email %}
+          <div class="alert alert-danger"><strong>Woops! </strong>{{error_email}}</div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+  </div>
+  <div class="col-sm-4 col-md-6 align-self-center">
+    <div class="text-center">
+        <p> Already one of us?</p>
+        <a class="btn btn-secondary" href="/blog/login">Login</a>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
