@@ -8,7 +8,7 @@
         </button>
         <a class="navbar-brand" href="/blog">Basic Blog</a>
         <div class="collapse navbar-collapse" id="navbarToggle">
-          <form class="form-inline" role="search" action="/blog/search" method="post">
+          <form class="form-inline" role="search" action="/blog/search" method="GET">
             <div class="input-group">
               <input class="form-control" type="text" placeholder="Search" name="search"></input>
               <button class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
@@ -19,10 +19,10 @@
               <a class="nav-link" href="/blog">Home</a>
             </li>
             <li class="nav-item mx-auto">
-              <a class="nav-link" href="/user/">Create</a>
+              <a class="nav-link" href="/blog/newpost">Create</a>
             </li>
             <li class="nav-item mx-auto">
-              <a class="nav-link" href="/user/">Profile</a>
+              <a class="nav-link" href="/blog/user/{{ user_id }}">Profile</a>
             </li>
           </ul>
 

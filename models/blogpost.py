@@ -2,7 +2,9 @@ from google.appengine.ext import db
 from models.like import Like
 from models.user import User
 from models.comment import Comment
+import re
 from helpers import *
+import logging
 
 
 class BlogPost(db.Model):
@@ -46,6 +48,25 @@ class BlogPost(db.Model):
         """
         posts = BlogPost.all().filter('owner_id =', int(owner_id)).ancestor(blog_key())
         return posts
+
+    @classmethod
+    def by_search_term(cls, search_phrase):
+        """Get stored BlogPost instances with subject containing a search term.
+
+        Args:
+            target: List of strings, search terms to find
+        Returns:
+            Query object of Post
+        """
+        posts = BlogPost.all().ancestor(blog_key())
+        results = []
+        if posts:
+            for post in posts:
+                for s in search_phrase:
+                    if findWord(s)(post.subject):
+                        results.append(post)
+                        break
+        return results
 
     @classmethod
     def make(cls, subject, content, owner_id):

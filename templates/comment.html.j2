@@ -6,10 +6,11 @@
     </footer>
   </blockquote>
 </div>
-{% if current_user_id == comment.owner_id %}
-  <div class="col-3 align-self-center">
+
+<div class="col-3 align-self-center">
+    {% if current_user_id == comment.owner_id %}
     <form class=""action="/blog/deletecomment/{{post_id}}/{{ comment.key().id() }}" method="post">
       <button class="btn btn-danger" type="submit" value="delete">Delete</button>
     </form>
-  </div>
-{% endif %}
+  {% endif %}
+</div>

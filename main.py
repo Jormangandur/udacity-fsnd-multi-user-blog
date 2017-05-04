@@ -26,6 +26,7 @@ from handlers.welcome import WelcomeHandler
 from handlers.login import LoginHandler
 from handlers.logout import LogoutHandler
 from handlers.userpage import UserPageHandler
+from handlers.search import SearchHandler
 
 app = webapp2.WSGIApplication([
     ('/blog', FrontPageHandler),
@@ -42,4 +43,5 @@ app = webapp2.WSGIApplication([
     ('/blog/login', LoginHandler),
     ('/blog/logout', LogoutHandler),
     ('/blog/user/(\d+)', UserPageHandler),
+    ('/blog/search', SearchHandler),
 ], debug=True)

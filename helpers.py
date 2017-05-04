@@ -140,3 +140,7 @@ def check_secure(secure_val):
     test_val = secure_val.split('|')[0]
     if secure_val == make_secure(test_val):
         return test_val
+
+
+def findWord(w):
+    return re.compile(r"\b({0})\b".format(w), flags=re.IGNORECASE).search

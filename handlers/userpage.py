@@ -31,7 +31,6 @@ class UserPageHandler(BlogHandler):
         for entity in entities:
             post = BlogPost.by_id(entity.post_id)
             post_subjects.append(post.subject)
-
         return post_subjects
 
     def get(self, user_id):
@@ -39,15 +38,15 @@ class UserPageHandler(BlogHandler):
         posts = BlogPost.by_owner_id(user_id)
         comments = Comment.by_owner_id(user_id)
         likes = Like.by_owner_id(user_id)
-
-        comment_subjects = self.get_post_subjects(comments)
-        like_subjects = self.get_post_subjects(likes)
-
         # Create lists of (Comment/like instance, post_subject) tuples
         # post_subject = subject of post which the comment/like belongs to
         # Then iterated and accessed as item[0]=Comment/Like, item[1]=subject
-        comment_subject_tuple = zip(comments, comment_subjects)
-        like_subject_tuple = zip(likes, like_subjects)
+        if comments:
+            comment_subjects = self.get_post_subjects(comments)
+            comment_subject_tuple = zip(comments, comment_subjects)
+        if likes:
+            like_subjects = self.get_post_subjects(likes)
+            like_subject_tuple = zip(likes, like_subjects)
 
         self.render("userpage.html.j2", user=user, posts=posts,
                     comment_subject_tuple=comment_subject_tuple,

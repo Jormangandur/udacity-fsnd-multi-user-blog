@@ -16,13 +16,6 @@ class BlogHandler(webapp2.RequestHandler):
         - HTML generation
         - Cookie handling
         - User Login/Logout
-
-    Args:
-        secure_val: String, hash to be tested in format 'value|hash'
-
-    Returns:
-        True if secure_val is valid
-        None if invalid
     """
 
     def initialize(self, *a, **kw):
@@ -54,6 +47,8 @@ class BlogHandler(webapp2.RequestHandler):
         """
         env = get_env()
         t = env.get_template(template)
+        if self.user:
+            params['user_id'] = self.user.key().id()
         return t.render(params)
 
     def render(self, template, **kw):
