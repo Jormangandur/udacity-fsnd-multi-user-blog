@@ -1,6 +1,8 @@
 # TODO
-* Style userpage
-* Pass page title in as a template?
+* Pagination:
+ * User page
+ * Home page
+ * Comments sections
 * Users welcome page
   * Quick look at what they can do etc
 * Complete README

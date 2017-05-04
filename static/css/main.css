@@ -55,9 +55,9 @@ a {
     white-space: pre-wrap;
 }
 
-.post-front .post-content {
+.post-front .post-content, .page-user .post-content {
     /*line-height * lines to show * font size to limit view on front page*/
-    max-height: calc(1.5*5*1rem);
+    max-height: calc(1.5*2*1rem);
     overflow: hidden;
 }
 
@@ -94,5 +94,10 @@ a {
     }
     .navbar-collapse form[role="search"] button, .navbar-collapse form[role="search"] input {
         padding: 15px 12px;
+    }
+    .post-front .post-content, .page-user .post-content {
+        /*line-height * lines to show * font size to limit view on front page*/
+        max-height: calc(1.5*5*1rem);
+        overflow: hidden;
     }
 }

@@ -1,38 +1,59 @@
 {% extends "base.html.j2" %}
 
 {% block content %}
-  <h1>Summary for {{user.username}}</h1>
-  <div class="user-posts">
-    <h3>Your posts:</h3>
-    <ul>
-      {% for post in posts %}
-        <li><a href="/blog/{{ post.key().id() }}">{{ post.subject }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="user-comments">
-    <h3>Your comments:</h3>
-    <ul>
-      {% for item in comment_subject_tuple %}
-        <li><a href="/blog/{{ item[0].post_id }}">{{item[1]}}</a>
-        <ul>
-          <li>{{ item[0].content }}</li>
-        </ul>
-      {% endfor %}
-    </ul>
-  </div>
-  <div class="user-likes">
-    <h3>Your likes:</h3>
-    {% if like_subject_tuple %}
-      <ul>
-        {% for item in like_subject_tuple %}
-          <li><a href="/blog/{{ item[0].post_id }}">{{item[1]}}</a></li>
-        {% endfor %}
-      </ul>
-    {% else %}
-    <div class="alert alert-info text-center" role="alert">
-      <strong>Quick!</strong> Go like a post (or several), then it will appear here
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="text-center">Summary for {{user.username}}</h1>
     </div>
-    {% endif %}
   </div>
+  <br>
+  <div class="row">
+    <div class="col-md-4 ">
+      <h3>Your posts:</h3>
+      {% if posts %}
+          {% for post in posts %}
+          <div class="page-user">
+            {{ post.render() | safe }}
+          </div>
+          <br>
+          {% endfor %}
+      {% else %}
+        <div class="alert alert-info text-center" role="alert">
+          <strong>Quick!</strong> Go make a post (or several), then it will appear here
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      <h3>Your comments:</h3>
+      {% if comment_subject_tuple %}
+        {% for item in comment_subject_tuple %}
+        <blockquote class="blockquote">
+          <p class="mb-0 comment-content">{{ item[0].content }}</p>
+          <footer class="blockquote-footer">
+            On: <a href="/blog/{{ item[0].post_id }}">{{item[1]}}</a>
+          </footer>
+        </blockquote>
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-info text-center" role="alert">
+          <strong>Quick!</strong> Go comment on a post (or several), then it will appear here
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-md-4">
+      <h3>Your likes:</h3>
+      {% if like_subject_tuple %}
+        <ul>
+          {% for item in like_subject_tuple %}
+            <li><a href="/blog/{{ item[0].post_id }}">{{item[1]}}</a></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="alert alert-info text-center" role="alert">
+          <strong>Quick!</strong> Go like a post (or several), then it will appear here
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
 {% endblock %}
