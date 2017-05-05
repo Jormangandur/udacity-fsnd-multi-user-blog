@@ -21,9 +21,11 @@
             <li class="nav-item mx-auto">
               <a class="nav-link" href="/blog/newpost">Create</a>
             </li>
-            <li class="nav-item mx-auto">
-              <a class="nav-link" href="/blog/user/{{ user_id }}">Profile</a>
-            </li>
+            {% if user_id %}
+              <li class="nav-item mx-auto">
+                <a class="nav-link" href="/blog/user/{{ user_id }}">Profile</a>
+              </li>
+            {% endif %}
           </ul>
 
         </div>
