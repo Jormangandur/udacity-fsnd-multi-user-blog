@@ -17,7 +17,7 @@ To use locally:
 * Then view the application at ```http://localhost:8080```
 
 Or, try out the app here:
-  [Multi-User-Blog](http://)
+  [Multi-User-Blog](https://multi-user-blog-166711.appspot.com/blog)
 
 ## Requirements
 * Local installation of [Google App Engine]("https://cloud.google.com/appengine/docs/standard/python/") - for local usage.

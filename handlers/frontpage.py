@@ -15,8 +15,10 @@ class FrontPageHandler (BlogHandler):
         Gets 10 most recent posts from datastore and passes them as variables
         into front template.
         """
-        posts = BlogPost.all().order(
-            '-created').ancestor(blog_key()).fetch(limit=10)
+        posts = BlogPost.all()
+        if posts:
+            posts = posts.order(
+                '-created').ancestor(blog_key()).fetch(limit=10)
 
         self.render("front.html.j2", posts=posts)
 
