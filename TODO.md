@@ -5,15 +5,13 @@
   * ~~user_logged_in~~
   * ~~user_owns_post~~
   * ~~user_owns_comment~~
-* Style edit page
+* ~~Style edit page~~
+* One-many relationships (ReferenceProperty)
+  * User->Post
 * Pagination:
  * User page
  * Home page
  * Comments sections
-* Users welcome page
-  * Quick look at what they can do etc
 * Complete README
   * How to run Project
   * Dependencies etc
-
-  dev_appserver.py --clear_datastore=yes .
