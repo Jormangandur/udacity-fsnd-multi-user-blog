@@ -4,10 +4,13 @@ from helpers import *
 
 
 class CommentHandler(BlogHandler):
-    def post(self, post_id):
+
+    @BlogHandler.user_logged_in
+    @BlogHandler.post_exists
+    def post(self, post):
         content = self.request.get('content')
         owner_id = self.user.key().id()
-        post_id = int(post_id)
+        post_id = post.key().id()
 
         if content and owner_id and post_id:
             comment = Comment.make(content, owner_id, post_id)

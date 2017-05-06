@@ -11,21 +11,19 @@ class EditPostHandler(BlogHandler):
         self.render("edit.html.j2", subject=subject,
                     content=content, post=post)
 
-    def get(self, post_id):
-        post = BlogPost.by_id(post_id)
-        if self.user:
-            if self.user.key().id() == post.owner_id:
-                self.render_edit(post)
-            else:
-                self.redirect('/blog/%s' % post_id)
-        else:
-            self.redirect('/blog/login')
+    @BlogHandler.user_logged_in
+    @BlogHandler.post_exists
+    @BlogHandler.user_owns_post
+    def get(self, post):
+        self.render_edit(post)
 
-    def post(self, post_id):
+    @BlogHandler.user_logged_in
+    @BlogHandler.post_exists
+    @BlogHandler.user_owns_post
+    def post(self, post):
         subject = self.request.get('subject')
         content = self.request.get('content')
         post_id = self.request.get('post_id')
-        post = BlogPost.by_id(post_id)
         if post:
             post.subject = subject
             post.content = content

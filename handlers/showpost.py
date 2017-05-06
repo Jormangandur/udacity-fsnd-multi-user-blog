@@ -36,10 +36,11 @@ class ShowPostHandler(BlogHandler):
             self.error(404)
             return
 
-    def get(self, post_id):
+    @BlogHandler.post_exists
+    def get(self, post):
         unlike = False
         error = self.get_cookie('error')
-        post = BlogPost.by_id(post_id)
+        post_id = post.key().id()
         likes = Like.by_post_id(post_id)
 
         if self.user and self.prev_like(likes, self.user.key().id()):

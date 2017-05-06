@@ -11,12 +11,11 @@ class NewPostHandler(BlogHandler):
         self.render("new_post.html.j2", subject=subject,
                     content=content, error=error)
 
+    @BlogHandler.user_logged_in
     def get(self):
-        if self.user:
-            self.render_new_post()
-        else:
-            self.redirect('/blog/login')
+        self.render_new_post()
 
+    @BlogHandler.user_logged_in
     def post(self):
         """Gets data from input form.
 
@@ -30,11 +29,10 @@ class NewPostHandler(BlogHandler):
         content = self.request.get("content")
 
         if subject and content:
-            if self.user:
-                owner_id = self.user.key().id()
-                post = BlogPost.make(subject, content, owner_id)
-                post.put()
-                self.redirect("/blog/%s" % str(post.key().id()))
+            owner_id = self.user.key().id()
+            post = BlogPost.make(subject, content, owner_id)
+            post.put()
+            self.redirect("/blog/%s" % str(post.key().id()))
         else:
             error = "Please enter subject and content!"
             self.render_new_post(subject, content, error)

@@ -10,6 +10,7 @@ class SearchHandler(BlogHandler):
     def render_results(self, posts):
         self.render("searchresults.html.j2", posts=posts)
 
+    @BlogHandler.user_logged_in
     def get(self):
         target = self.request.get('search')
         target = target.upper().split()

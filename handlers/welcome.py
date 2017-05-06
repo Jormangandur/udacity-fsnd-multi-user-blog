@@ -9,6 +9,7 @@ class WelcomeHandler(BlogHandler):
     present.
     """
 
+    @BlogHandler.user_logged_in
     def get(self):
         """Generates page with personalised welcome message.
 

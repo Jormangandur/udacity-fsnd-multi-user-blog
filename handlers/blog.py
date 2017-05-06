@@ -2,6 +2,11 @@ import webapp2
 import jinja2
 from models.user import User
 from helpers import *
+from functools import wraps
+from models.blogpost import BlogPost
+from models.comment import Comment
+from google.appengine.ext import db
+import logging
 
 
 def get_env():
@@ -17,6 +22,65 @@ class BlogHandler(webapp2.RequestHandler):
         - Cookie handling
         - User Login/Logout
     """
+
+    @staticmethod
+    def post_exists(function):
+        @wraps(function)
+        def wrapper(self, post_id, *args, **kwargs):
+            post = BlogPost.by_id(post_id)
+            if post:
+                return function(self, post, *args, **kwargs)
+            else:
+                self.error(404)
+                return
+        return wrapper
+
+    @staticmethod
+    def user_logged_in(function):
+        @wraps(function)
+        def wrapper(self, *args, **kwargs):
+            if self.user:
+                return function(self, *args, **kwargs)
+            else:
+                self.redirect('/blog/login')
+                return
+        return wrapper
+
+    @staticmethod
+    def user_owns_post(function):
+        @wraps(function)
+        def wrapper(self, post, *args, **kwargs):
+            if self.user.key().id() == post.owner_id:
+                return function(self, post, *args, **kwargs)
+            else:
+                self.redirect('/blog/%s' % post_id)
+                return
+        return wrapper
+
+    @staticmethod
+    def comment_exists(function):
+        @wraps(function)
+        def wrapper(self, comment_id, *args, **kwargs):
+            logging.info(comment_id)
+            comment = Comment.by_id(comment_id)
+            if comment:
+                return function(self, comment, *args, **kwargs)
+            else:
+                self.error(404)
+                return
+        return wrapper
+
+    @staticmethod
+    def user_owns_comment(function):
+        @wraps(function)
+        def wrapper(self, comment, *args, **kwargs):
+            logging.info(comment)
+            if self.user.key().id() == comment.owner_id:
+                return function(self, comment, *args, **kwargs)
+            else:
+                self.redirect('blog/%s' % comment.post_id)
+                return
+        return wrapper
 
     def initialize(self, *a, **kw):
         """Get currently logged in user on every HTTP request

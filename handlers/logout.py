@@ -8,7 +8,7 @@ class LogoutHandler(BlogHandler):
     Calls parent BlogHandler logout() method to remove user_id cookie then
     redirects to '/blog'
     """
-
+    @BlogHandler.user_logged_in
     def get(self):
         if self.user:
             self.logout()
