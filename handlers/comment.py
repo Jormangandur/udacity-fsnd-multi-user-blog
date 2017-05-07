@@ -9,9 +9,8 @@ class CommentHandler(BlogHandler):
     @BlogHandler.post_exists
     def post(self, post):
         content = self.request.get('content')
-        post_id = post.key().id()
 
-        if content and post_id:
-            comment = Comment.make(self.user, content, post_id)
+        if content:
+            comment = Comment.make(self.user, post, content)
             comment.put()
-        self.redirect('/blog/%s' % post_id)
+        self.redirect('/blog/%s' % post.key().id())

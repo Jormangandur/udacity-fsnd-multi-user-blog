@@ -12,8 +12,8 @@ class DeletePostHandler(BlogHandler):
     @BlogHandler.user_owns_post
     def get(self, post):
         post_id = post.key().id()
-        likes = Like.by_post_id(post_id)
-        comments = Comment.by_post_id(post_id)
+        likes = post.likes.ancestor(likes_key())
+        comments = post.comments.ancestor(comments_key())
         post.delete()
         db.delete(likes)
         db.delete(post)

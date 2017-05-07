@@ -1,7 +1,5 @@
 from google.appengine.ext import db
-from models.like import Like
 from models.user import User
-from models.comment import Comment
 import re
 from helpers import *
 import logging
@@ -20,12 +18,6 @@ class BlogPost(db.Model):
     def render(self):
         owner = self.owner
         return render_str("post.html.j2", post=self, owner=owner)
-
-    def likes_count(self):
-        return Like.by_post_id(self.key().id()).count()
-
-    def comments_count(self):
-        return Comment.by_post_id(self.key().id()).count()
 
     @classmethod
     def by_id(cls, post_id):

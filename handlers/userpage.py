@@ -35,9 +35,9 @@ class UserPageHandler(BlogHandler):
 
     def get(self, user_id):
         user = User.by_id(user_id)
-        posts = user.posts
-        comments = user.comments
-        likes = user.likes
+        posts = user.posts.ancestor(blog_key())
+        comments = user.comments.ancestor(comments_key())
+        likes = user.likes.ancestor(likes_key())
         # Create lists of (Comment/like instance, post_subject) tuples
         # post_subject = subject of post which the comment/like belongs to
         # Then iterated and accessed as item[0]=Comment/Like, item[1]=subject

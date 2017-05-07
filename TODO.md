@@ -6,14 +6,14 @@
   * ~~user_owns_post~~
   * ~~user_owns_comment~~
 * ~~Style edit page~~
-* One-many relationships (ReferenceProperty)
+* ~~One-many relationships (ReferenceProperty)~~
   * ~~User->Post~~
   * ~~User->Comment~~
   * ~~User->Like~~
+* Change like system
+  * passing bool -> functions
 * Pagination:
  * User page
  * Home page
  * Comments sections
 * Complete README
-  * How to run Project
-  * Dependencies etc

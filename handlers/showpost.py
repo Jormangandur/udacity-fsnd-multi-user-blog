@@ -41,10 +41,9 @@ class ShowPostHandler(BlogHandler):
     def get(self, post):
         unlike = False
         error = self.get_cookie('error')
-        post_id = post.key().id()
-        likes = Like.by_post_id(post_id)
+        likes = post.likes.ancestor(comments_key())
 
         if self.user and self.prev_like(likes, self.user):
             unlike = True
-        comments = Comment.by_post_id(post_id).order('-created')
+        comments = post.comments.ancestor(comments_key())
         self.render_post(post, error, unlike, comments)

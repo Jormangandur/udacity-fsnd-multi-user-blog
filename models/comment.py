@@ -1,13 +1,15 @@
 from google.appengine.ext import db
 from models.user import User
+from models.blogpost import BlogPost
 from helpers import *
 
 
 class Comment(db.Model):
     owner = db.ReferenceProperty(User,
                                  collection_name="comments")
+    post = db.ReferenceProperty(BlogPost,
+                                collection_name="comments")
     content = db.TextProperty(required=True)
-    post_id = db.IntegerProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
     def render(self, post_id="", current_user=""):
@@ -50,7 +52,7 @@ class Comment(db.Model):
         return Comment.get_by_id(int(comment_id), parent=comments_key())
 
     @classmethod
-    def make(cls, owner, content, post_id):
+    def make(cls, owner, post, content):
         """Create new Comment() model instance.
 
         Args:
@@ -63,5 +65,5 @@ class Comment(db.Model):
 
         return Comment(parent=comments_key(),
                        owner=owner,
-                       content=content,
-                       post_id=int(post_id))
+                       post=post,
+                       content=content)
