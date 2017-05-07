@@ -2,13 +2,13 @@
   <blockquote class="blockquote">
     <p class="mb-0 comment-content">{{ comment.content }}</p>
     <footer class="blockquote-footer">
-      {{ owner_name }} <small>{{ comment.created.strftime("%b %d, %Y") }}</small>
+      {{ comment.owner.username }} <small>{{ comment.created.strftime("%b %d, %Y") }}</small>
     </footer>
   </blockquote>
 </div>
 
 <div class="col-3 align-self-center">
-    {% if current_user_id == comment.owner_id %}
+    {% if current_user and current.user.key() == comment.owner.key() %}
     <form class=""action="/blog/deletecomment/{{ comment.key().id() }}/{{post_id}}" method="post">
       <button class="btn btn-danger" type="submit" value="delete">Delete</button>
     </form>

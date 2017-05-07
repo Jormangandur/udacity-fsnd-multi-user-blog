@@ -35,19 +35,20 @@ class UserPageHandler(BlogHandler):
 
     def get(self, user_id):
         user = User.by_id(user_id)
-        posts = BlogPost.by_owner_id(user_id)
-        comments = Comment.by_owner_id(user_id)
-        likes = Like.by_owner_id(user_id)
+        posts = user.posts
+        comments = user.comments
+        likes = user.likes
         # Create lists of (Comment/like instance, post_subject) tuples
         # post_subject = subject of post which the comment/like belongs to
         # Then iterated and accessed as item[0]=Comment/Like, item[1]=subject
-        if comments:
+        like_subject_tuple = []
+        comment_subject_tuple = []
+        if comments.count() != 0:
             comment_subjects = self.get_post_subjects(comments)
             comment_subject_tuple = zip(comments, comment_subjects)
-        if likes:
+        if likes.count() != 0:
             like_subjects = self.get_post_subjects(likes)
             like_subject_tuple = zip(likes, like_subjects)
-
         self.render("userpage.html.j2", user=user, posts=posts,
                     comment_subject_tuple=comment_subject_tuple,
                     like_subject_tuple=like_subject_tuple)

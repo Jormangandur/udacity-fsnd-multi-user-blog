@@ -5,7 +5,7 @@
       </h4>
       <h6 class="card-subtitle">
         {{ post.created.strftime("%b %d, %Y") }}
-        <a class="text-muted" href="/blog/user/{{ post.owner_id }}"><small>by {{ owner_name }}</small></a>
+        <a class="text-muted" href="/blog/user/{{ post.owner.key().id() }}"><small>by {{ owner.username }}</small></a>
       </h6>
     </div>
     <div class="card-block ">

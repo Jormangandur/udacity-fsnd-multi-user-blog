@@ -50,7 +50,7 @@ class BlogHandler(webapp2.RequestHandler):
     def user_owns_post(function):
         @wraps(function)
         def wrapper(self, post, *args, **kwargs):
-            if self.user.key().id() == post.owner_id:
+            if self.user.key() == post.owner.key():
                 return function(self, post, *args, **kwargs)
             else:
                 self.redirect('/blog/%s' % post_id)
@@ -75,7 +75,7 @@ class BlogHandler(webapp2.RequestHandler):
         @wraps(function)
         def wrapper(self, comment, *args, **kwargs):
             logging.info(comment)
-            if self.user.key().id() == comment.owner_id:
+            if self.user.key() == comment.owner.key():
                 return function(self, comment, *args, **kwargs)
             else:
                 self.redirect('blog/%s' % comment.post_id)
@@ -169,19 +169,19 @@ class BlogHandler(webapp2.RequestHandler):
         """
         self.response.headers.add_header('Set-Cookie', 'user_id=;Path=/')
 
-    def prev_like(self, likes, user_id):
+    def prev_like(self, likes, user):
         for like in likes:
-            if like.owner_id == user_id:
+            if like.owner.key() == user.key():
                 return True
 
     def check_like(self, post, likes):
         if not self.user:
             self.set_cookie('error', 'no_user')
             return
-        if self.user.key().id() == post.owner_id:
+        if self.user.key() == post.owner.key():
             self.set_cookie('error', 'like_own_post')
             return
-        if self.prev_like(likes, self.user.key().id()):
+        if self.prev_like(likes, self.user):
             self.set_cookie('error', 'prev_like')
             return
 

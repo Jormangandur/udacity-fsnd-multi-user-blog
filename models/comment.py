@@ -4,16 +4,15 @@ from helpers import *
 
 
 class Comment(db.Model):
+    owner = db.ReferenceProperty(User,
+                                 collection_name="comments")
     content = db.TextProperty(required=True)
-    owner_id = db.IntegerProperty(required=True)
     post_id = db.IntegerProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
-    def render(self, post_id="", current_user_id=""):
-        owner = User.by_id(self.owner_id)
-        owner_name = owner.username
+    def render(self, post_id="", current_user=""):
         return render_str("comment.html.j2", comment=self, post_id=post_id,
-                          current_user_id=current_user_id, owner_name=owner_name)
+                          current_user=current_user)
 
     @classmethod
     def by_post_id(cls, post_id):
@@ -51,7 +50,7 @@ class Comment(db.Model):
         return Comment.get_by_id(int(comment_id), parent=comments_key())
 
     @classmethod
-    def make(cls, content, owner_id, post_id):
+    def make(cls, owner, content, post_id):
         """Create new Comment() model instance.
 
         Args:
@@ -62,5 +61,7 @@ class Comment(db.Model):
             Instance of Comment Model
         """
 
-        return Comment(parent=comments_key(), content=content,
-                       owner_id=int(owner_id), post_id=int(post_id))
+        return Comment(parent=comments_key(),
+                       owner=owner,
+                       content=content,
+                       post_id=int(post_id))

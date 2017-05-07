@@ -4,6 +4,7 @@ from models.like import Like
 from models.comment import Comment
 from helpers import *
 from google.appengine.ext import db
+import logging
 
 
 class ShowPostHandler(BlogHandler):
@@ -17,11 +18,11 @@ class ShowPostHandler(BlogHandler):
         error_msg = ""
         if post:
             can_edit = False
-            current_user_id = ""
+            current_user = ""
             if self.user:
-                if self.user.key().id() == post.owner_id:
+                if self.user.key() == post.owner.key():
                     can_edit = True
-                current_user_id = self.user.key().id()
+                current_user = self.user
             if error == "like_own_post":
                 error_msg = "Cannot like own post"
             elif error == "no_user":
@@ -31,7 +32,7 @@ class ShowPostHandler(BlogHandler):
             self.set_cookie("error", "")
             self.render("permalink.html.j2", post=post,
                         error_msg=error_msg, unlike=unlike, can_edit=can_edit,
-                        comments=comments, current_user_id=current_user_id)
+                        comments=comments, current_user=current_user)
         else:
             self.error(404)
             return
@@ -43,7 +44,7 @@ class ShowPostHandler(BlogHandler):
         post_id = post.key().id()
         likes = Like.by_post_id(post_id)
 
-        if self.user and self.prev_like(likes, self.user.key().id()):
+        if self.user and self.prev_like(likes, self.user):
             unlike = True
         comments = Comment.by_post_id(post_id).order('-created')
         self.render_post(post, error, unlike, comments)

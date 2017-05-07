@@ -45,7 +45,7 @@
     {% for comment in comments %}
       <div class="row justify-content-center">
 
-          {{ comment.render(post.key().id(), current_user_id) | safe}}
+          {{ comment.render(post.key().id(), current_user) | safe}}
 
       </div>
     {% endfor %}

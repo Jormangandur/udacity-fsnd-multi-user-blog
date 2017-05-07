@@ -7,7 +7,9 @@
   * ~~user_owns_comment~~
 * ~~Style edit page~~
 * One-many relationships (ReferenceProperty)
-  * User->Post
+  * ~~User->Post~~
+  * ~~User->Comment~~
+  * ~~User->Like~~
 * Pagination:
  * User page
  * Home page

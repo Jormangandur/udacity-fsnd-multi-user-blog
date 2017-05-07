@@ -10,9 +10,9 @@ class UnlikePostHandler(BlogHandler):
     @BlogHandler.post_exists
     def post(self, post):
         post_id = post.key().id()
-        owner_id = self.user.key().id()
-        like = Like.by_post_id(post_id).filter(
-            'owner_id =', int(owner_id)).ancestor(likes_key()).get()
+        owner_likes = self.user.likes
+        like = self.user.likes.filter('post_id =', int(
+            post_id)).ancestor(likes_key()).get()
         if like:
             like.delete()
         self.redirect('/blog/%s' % post_id)

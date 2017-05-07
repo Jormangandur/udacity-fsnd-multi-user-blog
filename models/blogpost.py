@@ -10,15 +10,16 @@ import logging
 class BlogPost(db.Model):
     """Model class for blog posts.
     """
+    owner = db.ReferenceProperty(User,
+                                 collection_name="posts")
+
     subject = db.StringProperty(required=True)
     content = db.TextProperty(required=True)
-    owner_id = db.IntegerProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
 
     def render(self):
-        owner = User.by_id(self.owner_id)
-        owner_name = owner.username
-        return render_str("post.html.j2", post=self, owner_name=owner_name)
+        owner = self.owner
+        return render_str("post.html.j2", post=self, owner=owner)
 
     def likes_count(self):
         return Like.by_post_id(self.key().id()).count()
@@ -69,7 +70,7 @@ class BlogPost(db.Model):
         return results
 
     @classmethod
-    def make(cls, subject, content, owner_id):
+    def make(cls, owner, subject, content):
         """Create new BlogPost() model instance.
 
         Args:
@@ -80,6 +81,6 @@ class BlogPost(db.Model):
             Instance of BlogPost Model/Class
         """
         return BlogPost(parent=blog_key(),
+                        owner=owner,
                         subject=subject,
-                        content=content,
-                        owner_id=int(owner_id))
+                        content=content)

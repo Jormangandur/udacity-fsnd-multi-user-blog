@@ -1,10 +1,12 @@
 from google.appengine.ext import db
+from models.user import User
 from helpers import *
 
 
 class Like(db.Model):
+    owner = db.ReferenceProperty(User,
+                                 collection_name="likes")
     post_id = db.IntegerProperty(required=True)
-    owner_id = db.IntegerProperty()
 
     @classmethod
     def by_post_id(cls, post_id):
@@ -31,7 +33,7 @@ class Like(db.Model):
         return likes
 
     @classmethod
-    def make(cls, post_id, owner_id):
+    def make(cls, owner, post_id):
         """Create new Like() model instance.
 
         Args:
@@ -39,4 +41,6 @@ class Like(db.Model):
         Returns:
             Instance of Like Model
         """
-        return Like(parent=likes_key(), post_id=int(post_id), owner_id=owner_id)
+        return Like(parent=likes_key(),
+                    owner=owner,
+                    post_id=int(post_id))
