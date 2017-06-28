@@ -1,5 +1,5 @@
 # Multi User Blog
-Udacity FSND Project - Multi User Blog
+![Part of the Udacity Full-Stack Web Development Nanodegree](https://img.shields.io/badge/Udacity-Full--Stack%20Web%20Developer%20Nanodegree-02b3e4.svg)
 ---------------------
 Basic Blog web application including:
 * Front page listing of blog posts
@@ -11,8 +11,8 @@ Basic Blog web application including:
 
 ## Usage
 To use locally:
-* Clone the repo: ``` git@github.com:Jormangandur/udacity-fsnd-multi-user-blog.git```
-  * Alternatively [download]("https://github.com/Jormangandur/udacity-fsnd-multi-user-blog/archive/master.zip") and extract zip
+* Clone the repo: ``` git@github.com:SteadBytes/multi-user-blog.git```
+  * Alternatively [download]("https://github.com/SteadBytes/multi-user-blog/archive/master.zip") and extract zip
 * Navigate to the project root and run: ```dev_appserver.py .```
 * Then view the application at ```http://localhost:8080```
 
